@@ -1,5 +1,3 @@
-const hangulCharacterRegex = /^[\u3131-\uD79D]$/
-
 document.addEventListener('compositionend', (_e) => {
   const e = _e as CompositionEvent
   const target = e.target as (HTMLElement | null)
@@ -13,8 +11,7 @@ document.addEventListener('keydown', (e) => {
   if (
     target &&
     !e.isComposing &&
-    e.key === target.dataset.lastCompositionEndString &&
-    hangulCharacterRegex.test(e.key)
+    e.key === target.dataset.lastCompositionEndString
   ) {
     e.preventDefault()
   }
