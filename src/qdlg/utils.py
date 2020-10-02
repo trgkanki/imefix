@@ -13,25 +13,24 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# -*- coding: utf-8 -*-
-#
-# imefix v20.5.4i8
-#
-# Copyright: trgk (phu54321@naver.com)
-# License: GNU AGPL, version 3 or later;
-# See http://www.gnu.org/licenses/agpl.html
-
-from aqt.editor import Editor
-from anki.hooks import wrap
-from aqt.utils import askUser
-
-from .utils import openChangelog
-from .utils.JSEval import execJSFile
-from .utils import uuid  # duplicate UUID checked here
+from PyQt5.Qt import QLayout, QWidget
 
 
-def onLoadNote(self, focusTo=None):
-    execJSFile(self.web, "js/main.min.js", once=True)
+def addLayoutOrWidget(layout, child):
+    if isinstance(child, QLayout):
+        layout.addLayout(child)
+    elif isinstance(child, QWidget):
+        layout.addWidget(child)
+    else:
+        raise NotImplementedError
 
 
-Editor.loadNote = wrap(Editor.loadNote, onLoadNote, "after")
+def continuationHelper(getter, setter):
+    def _(self, newValue=None):
+        if newValue is None:
+            return getter(self)
+        else:
+            setter(self, newValue)
+            return self
+
+    return _

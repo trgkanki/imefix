@@ -13,25 +13,18 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# -*- coding: utf-8 -*-
-#
-# imefix v20.5.4i8
-#
-# Copyright: trgk (phu54321@naver.com)
-# License: GNU AGPL, version 3 or later;
-# See http://www.gnu.org/licenses/agpl.html
+from ..stack import qDlgStackTop
+from .Style import StylableWidget
 
-from aqt.editor import Editor
-from anki.hooks import wrap
-from aqt.utils import askUser
-
-from .utils import openChangelog
-from .utils.JSEval import execJSFile
-from .utils import uuid  # duplicate UUID checked here
+from PyQt5.Qt import QLabel
 
 
-def onLoadNote(self, focusTo=None):
-    execJSFile(self.web, "js/main.min.js", once=True)
+class Text(StylableWidget):
+    def __init__(self, text):
+        super().__init__()
+        self.widget = QLabel(text)
+        qDlgStackTop().addChild(self.widget)
 
-
-Editor.loadNote = wrap(Editor.loadNote, onLoadNote, "after")
+    def wordWrap(self, enabled):
+        self.widget.setWordWrap(enabled)
+        return self

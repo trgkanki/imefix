@@ -13,25 +13,31 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# -*- coding: utf-8 -*-
-#
-# imefix v20.5.4i8
-#
-# Copyright: trgk (phu54321@naver.com)
-# License: GNU AGPL, version 3 or later;
-# See http://www.gnu.org/licenses/agpl.html
+import threading
 
-from aqt.editor import Editor
-from anki.hooks import wrap
-from aqt.utils import askUser
-
-from .utils import openChangelog
-from .utils.JSEval import execJSFile
-from .utils import uuid  # duplicate UUID checked here
+local = threading.local()
 
 
-def onLoadNote(self, focusTo=None):
-    execJSFile(self.web, "js/main.min.js", once=True)
+def getQDlgStack():
+    try:
+        return local.qDlgStack
+    except AttributeError:
+        local.qDlgStack = []
+        return local.qDlgStack
 
 
-Editor.loadNote = wrap(Editor.loadNote, onLoadNote, "after")
+def pushQDlgStack(el):
+    getQDlgStack().append(el)
+
+
+def popQDlgStack(el):
+    lastEl = getQDlgStack().pop()
+    assert lastEl == el
+
+
+def qDlgStackTop():
+    return getQDlgStack()[-1]
+
+
+def qDlgStackGetDialog():
+    return getQDlgStack()[0]

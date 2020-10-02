@@ -13,25 +13,23 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# -*- coding: utf-8 -*-
-#
-# imefix v20.5.4i8
-#
-# Copyright: trgk (phu54321@naver.com)
-# License: GNU AGPL, version 3 or later;
-# See http://www.gnu.org/licenses/agpl.html
-
-from aqt.editor import Editor
-from anki.hooks import wrap
-from aqt.utils import askUser
-
-from .utils import openChangelog
-from .utils.JSEval import execJSFile
-from .utils import uuid  # duplicate UUID checked here
+import sys
+from qdlgproxy import QDlg, Text, Button  # type: ignore
+from PyQt5.Qt import QApplication, QMessageBox
 
 
-def onLoadNote(self, focusTo=None):
-    execJSFile(self.web, "js/main.min.js", once=True)
+@QDlg("Test dialog", size=[640, 480])
+def qDlgClass(dlg):
+    Text("Hello world!")
+
+    def onClick():
+        QMessageBox.warning(
+            None, "test msgbox", "content",
+        )
+
+    Button("Hello world!").onClick(onClick)
 
 
-Editor.loadNote = wrap(Editor.loadNote, onLoadNote, "after")
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    qDlgClass.run()

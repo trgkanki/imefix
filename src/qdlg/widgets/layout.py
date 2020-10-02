@@ -13,25 +13,29 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# -*- coding: utf-8 -*-
-#
-# imefix v20.5.4i8
-#
-# Copyright: trgk (phu54321@naver.com)
-# License: GNU AGPL, version 3 or later;
-# See http://www.gnu.org/licenses/agpl.html
+from ..stack import qDlgStackTop
+from ..container import QDlgContainer
+from ..utils import addLayoutOrWidget
 
-from aqt.editor import Editor
-from anki.hooks import wrap
-from aqt.utils import askUser
-
-from .utils import openChangelog
-from .utils.JSEval import execJSFile
-from .utils import uuid  # duplicate UUID checked here
+from PyQt5.Qt import QVBoxLayout, QHBoxLayout
 
 
-def onLoadNote(self, focusTo=None):
-    execJSFile(self.web, "js/main.min.js", once=True)
+class LayoutBase(QDlgContainer):
+    def __init__(self, LayoutClass, margin=0):
+        self.layout = LayoutClass()
+        self.layout.setContentsMargins(margin, margin, margin, margin)
+        qDlgStackTop().addChild(self.layout)
+
+    def addChild(self, child):
+        addLayoutOrWidget(self.layout, child)
+        return self
 
 
-Editor.loadNote = wrap(Editor.loadNote, onLoadNote, "after")
+class VStack(LayoutBase):
+    def __init__(self, margin=0):
+        super().__init__(QVBoxLayout, margin)
+
+
+class HStack(LayoutBase):
+    def __init__(self, margin=0):
+        super().__init__(QHBoxLayout, margin)
