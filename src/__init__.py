@@ -15,7 +15,7 @@
 
 # -*- coding: utf-8 -*-
 #
-# imefix v20.5.4i8
+# imefix v20.10.2i101
 #
 # Copyright: trgk (phu54321@naver.com)
 # License: GNU AGPL, version 3 or later;
